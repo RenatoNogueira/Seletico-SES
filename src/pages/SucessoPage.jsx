@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { CheckCircle, User, Mail, Upload, Home, FileText, Edit, X, Loader2, LogOut } from 'lucide-react'
 import FileUploader from '../components/FileUploader'
 
-const SucessoPage = ({ data: initialData, onSubmit, onLogout }) => {
+const SucessoPage = ({ data: initialData, onSubmit }) => {
   const navigate = useNavigate()
   const [data, setData] = useState(initialData)
   const [isEditingDocs, setIsEditingDocs] = useState(false)
@@ -17,13 +17,10 @@ const SucessoPage = ({ data: initialData, onSubmit, onLogout }) => {
 
   // Função para sair
   const handleLogout = () => {
-    if (onLogout) {
-      onLogout() // Chama a função de logout passada como prop
-    } else {
-      // Redireciona para a página de login se nenhuma função for fornecida
-      navigate('/formulario')
-    }
-  }
+    // Limpar dados de autenticação, tokens, etc.
+    localStorage.clear();
+    window.location.href = '/'; // Redireciona para a página de login
+  };
 
   // Formatações
   const formatCPF = (cpf) => {
@@ -145,10 +142,8 @@ const SucessoPage = ({ data: initialData, onSubmit, onLogout }) => {
                 </Button>
                 <Button
                   onClick={handleLogout}
-                  variant="ghost"
-                  className="flex items-center gap-2 text-red-600 hover:text-red-700"
+                  className="w-full text-left px-4 py-2 rounded-lg transition-all cursor-pointer text-red-600 hover:bg-red-100"
                 >
-                  <LogOut className="w-4 h-4" />
                   Sair
                 </Button>
               </div>

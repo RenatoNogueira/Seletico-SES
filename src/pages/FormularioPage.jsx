@@ -263,8 +263,6 @@ const FormularioPage = ({ userData, onSubmit }) => {
   }
 
   const handleLogout = () => {
-    // Limpar dados de autenticação, tokens, etc.
-    localStorage.clear();
     window.location.href = '/'; // Redireciona para a página de login
   };
 
