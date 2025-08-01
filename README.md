@@ -33,9 +33,9 @@ Sistema completo de formulário com login usando CPF e data de nascimento, valid
 
 2. **Instale as dependências**
    ```bash
-   npm install
+   npm install --force
    # ou
-   pnpm install
+   pnpm install --force
    # ou
    yarn install
    ```
