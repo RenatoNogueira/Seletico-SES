@@ -1,0 +1,16 @@
+# Pastas
+node_modules/
+dist/
+
+# Arquivos
+*.log
+*.tmp
+.env
+
+# Arquivos de configuração
+.idea/
+.vscode/
+
+# Arquivos temporários
+*.swp
+*.swo

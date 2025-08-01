@@ -1,0 +1,62 @@
+/* Estilos para o formulário */
+.scroll-mt-20 {
+    scroll-margin-top: 5rem;
+}
+
+/* Melhorias para inputs e selects */
+input,
+select {
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Estilo para erros */
+.border-red-500 {
+    border-color: #ef4444;
+}
+
+.border-red-500:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+}
+
+/* Transições suaves */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+.transition-colors {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Melhorias para mobile */
+@media (max-width: 768px) {
+    .scroll-mt-20 {
+        scroll-margin-top: 6rem;
+    }
+}
+
+/* Animações */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
