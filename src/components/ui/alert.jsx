@@ -1,18 +1,16 @@
 import * as React from "react"
 import { cva } from "class-variance-authority";
+
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border px-4 py-3 text-sm grid items-start gap-1",
+  "relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground border-border",
+        default: "bg-card text-card-foreground",
         destructive:
-          "border-destructive/50 text-destructive [&>svg]:text-destructive bg-destructive/10",
-        success: "border-success/50 text-success [&>svg]:text-success bg-success/10",
-        warning: "border-warning/50 text-warning [&>svg]:text-warning bg-warning/10",
-        info: "border-info/50 text-info [&>svg]:text-info bg-info/10",
+          "text-destructive bg-card [&>svg]:text-current *:data-[slot=alert-description]:text-destructive/90",
       },
     },
     defaultVariants: {
@@ -21,48 +19,45 @@ const alertVariants = cva(
   }
 )
 
-const Alert = React.forwardRef(
-  ({ className, variant, children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        role="alert"
-        className={cn(
-          alertVariants({ variant }),
-          // Conditional grid layout when icon is present
-          "has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-3",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
-);
-Alert.displayName = "Alert";
+function Alert({
+  className,
+  variant,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="alert"
+      role="alert"
+      className={cn(alertVariants({ variant }), className)}
+      {...props} />
+  );
+}
 
-const AlertIcon = ({ className, ...props }) => (
-  <div className={cn("row-span-2 self-center", className)} {...props} />
-);
-AlertIcon.displayName = "AlertIcon";
+function AlertTitle({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="alert-title"
+      className={cn("col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", className)}
+      {...props} />
+  );
+}
 
-const AlertTitle = React.forwardRef(({ className, ...props }, ref) => (
-  <h5
-    ref={ref}
-    className={cn("font-medium leading-none tracking-tight", className)}
-    {...props}
-  />
-));
-AlertTitle.displayName = "AlertTitle";
+function AlertDescription({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="alert-description"
+      className={cn(
+        "text-muted-foreground col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed",
+        className
+      )}
+      {...props} />
+  );
+}
 
-const AlertDescription = React.forwardRef(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
-    {...props}
-  />
-));
-AlertDescription.displayName = "AlertDescription";
-
-export { Alert, AlertIcon, AlertTitle, AlertDescription };
+export { Alert, AlertTitle, AlertDescription }

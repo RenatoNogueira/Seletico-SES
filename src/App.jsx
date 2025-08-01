@@ -16,40 +16,56 @@ function App() {
     setUserData({ cpf, dataNascimento })
   }
 
+  const handleLogout = () => {
+    setIsAuthenticated(false)
+    setUserData(null)
+    setSubmittedData(null)
+    // Limpar rascunho salvo ao fazer logout
+    localStorage.removeItem('formulario_rascunho')
+  }
+
   const handleFormSubmit = (formData) => {
     setSubmittedData(formData)
+  }
+
+  const handleEditForm = (data) => {
+    setSubmittedData(null) // Limpar dados submetidos para permitir edição
   }
 
   return (
     <Router>
       <div className="min-h-screen bg-background">
         <Routes>
-          <Route
-            path="/"
+          <Route 
+            path="/" 
             element={
-              isAuthenticated ?
-                <Navigate to="/formulario" replace /> :
-                <LoginPage onLogin={handleLogin} />
-            }
+              isAuthenticated ? 
+              <Navigate to="/formulario" replace /> : 
+              <LoginPage onLogin={handleLogin} />
+            } 
           />
-          <Route
-            path="/formulario"
+          <Route 
+            path="/formulario" 
             element={
-              isAuthenticated ?
-                <FormularioPage
-                  userData={userData}
-                  onSubmit={handleFormSubmit}
-                /> :
-                <Navigate to="/" replace />
-            }
+              isAuthenticated ? 
+              <FormularioPage 
+                userData={userData} 
+                onSubmit={handleFormSubmit}
+                onLogout={handleLogout}
+              /> : 
+              <Navigate to="/" replace />
+            } 
           />
-          <Route
-            path="/sucesso"
+          <Route 
+            path="/sucesso" 
             element={
-              submittedData ?
-                <SucessoPage data={submittedData} /> :
-                <Navigate to="/" replace />
-            }
+              submittedData ? 
+              <SucessoPage 
+                data={submittedData} 
+                onEdit={handleEditForm}
+              /> : 
+              <Navigate to="/" replace />
+            } 
           />
         </Routes>
       </div>
