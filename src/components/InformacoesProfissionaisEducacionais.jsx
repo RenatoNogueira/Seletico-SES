@@ -7,16 +7,44 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Plus, Minus, Briefcase, GraduationCap } from 'lucide-react'
 
-const InformacoesProfissionaisEducacionais = ({ 
-  informacoesProfissionais, 
-  onInformacoesProfissionaisChange, 
-  disabled = false 
+const InformacoesProfissionaisEducacionais = ({
+  informacoesProfissionais,
+  onInformacoesProfissionaisChange,
+  disabled = false
 }) => {
   const [errors, setErrors] = useState({})
 
+  // Função para obter áreas de formação baseadas no nível
+  const getAreasFormacao = (nivel) => {
+    if (nivel === 'tecnico') {
+      return [
+        { value: 'tecnico_administracao', label: 'Técnico em Administração' },
+        { value: 'tecnico_enfermagem', label: 'Técnico em Enfermagem' },
+        { value: 'tecnico_eletrotecnica', label: 'Técnico em Eletrotécnica' },
+        { value: 'tecnico_massoterapia', label: 'Técnico em Massoterapia' }
+      ]
+    } else if (nivel === 'superior') {
+      return [
+        { value: 'administracao', label: 'Administração' },
+        { value: 'ciencias_contabeis', label: 'Ciências Contábeis' },
+        { value: 'ciencias_computacao', label: 'Ciências da Computação' },
+        { value: 'ciencias_economicas', label: 'Ciências Econômicas' },
+        { value: 'comunicacao_social', label: 'Comunicação Social/Jornalismo' },
+        { value: 'direito', label: 'Direito' },
+        { value: 'enfermagem', label: 'Enfermagem' },
+        { value: 'fisioterapia', label: 'Fisioterapia' },
+        { value: 'medicina', label: 'Medicina' },
+        { value: 'nutricao', label: 'Nutrição' },
+        { value: 'pedagogia', label: 'Pedagogia' },
+        { value: 'psicologia', label: 'Psicologia' }
+      ]
+    }
+    return []
+  }
+
   const adicionarInformacao = () => {
     if (disabled) return
-    
+
     const novaInformacao = {
       id: Date.now() + Math.random(),
       tipo: 'profissional', // 'profissional' ou 'educacional'
@@ -29,19 +57,21 @@ const InformacoesProfissionaisEducacionais = ({
       escolaridade: '',
       instituicao: '',
       curso: '',
-      dataFormatura: ''
+      dataFormatura: '',
+      nivel: '', // 'superior' ou 'tecnico'
+      areaFormacao: '' // área específica baseada no nível
     }
-    
+
     const novasInformacoes = [...informacoesProfissionais, novaInformacao]
     onInformacoesProfissionaisChange(novasInformacoes)
   }
 
   const removerInformacao = (informacaoId) => {
     if (disabled) return
-    
+
     const informacoesAtualizadas = informacoesProfissionais.filter(info => info.id !== informacaoId)
     onInformacoesProfissionaisChange(informacoesAtualizadas)
-    
+
     // Limpar erros da informação removida
     const novosErros = { ...errors }
     Object.keys(novosErros).forEach(key => {
@@ -54,91 +84,70 @@ const InformacoesProfissionaisEducacionais = ({
 
   const handleInputChange = (informacaoId, campo, valor) => {
     if (disabled) return
-    
-    const informacoesAtualizadas = informacoesProfissionais.map(info => 
-      info.id === informacaoId 
-        ? { ...info, [campo]: valor }
-        : info
+
+    const informacoesAtualizadas = informacoesProfissionais.map(info =>
+      info.id === informacaoId ? { ...info, [campo]: valor } : info
     )
-    
     onInformacoesProfissionaisChange(informacoesAtualizadas)
-    
+
     // Limpar erro do campo
-    const errorKey = `${campo}_${informacaoId}`
-    if (errors[errorKey]) {
-      setErrors(prev => {
-        const novosErros = { ...prev }
-        delete novosErros[errorKey]
-        return novosErros
-      })
+    if (errors[`${campo}_${informacaoId}`]) {
+      const novosErros = { ...errors }
+      delete novosErros[`${campo}_${informacaoId}`]
+      setErrors(novosErros)
     }
   }
 
   const handleSelectChange = (informacaoId, campo, valor) => {
-    handleInputChange(informacaoId, campo, valor)
+    if (disabled) return
+
+    const informacoesAtualizadas = informacoesProfissionais.map(info => {
+      if (info.id === informacaoId) {
+        const infoAtualizada = { ...info, [campo]: valor }
+
+        // Se mudou o tipo, limpar campos específicos
+        if (campo === 'tipo') {
+          if (valor === 'educacional') {
+            // Limpar campos profissionais
+            delete infoAtualizada.profissao
+            delete infoAtualizada.empresa
+            delete infoAtualizada.cargo
+            delete infoAtualizada.dataInicio
+            delete infoAtualizada.dataFim
+            delete infoAtualizada.atual
+          } else if (valor === 'profissional') {
+            // Limpar campos educacionais
+            delete infoAtualizada.nivel
+            delete infoAtualizada.areaFormacao
+            delete infoAtualizada.instituicao
+            delete infoAtualizada.curso
+            delete infoAtualizada.dataFormatura
+          }
+        }
+
+        return infoAtualizada
+      }
+      return info
+    })
+
+    onInformacoesProfissionaisChange(informacoesAtualizadas)
+
+    // Limpar erro do campo
+    if (errors[`${campo}_${informacaoId}`]) {
+      const novosErros = { ...errors }
+      delete novosErros[`${campo}_${informacaoId}`]
+      setErrors(novosErros)
+    }
   }
 
-  const handleCheckboxChange = (informacaoId, campo, checked) => {
+  const handleCheckboxChange = (informacaoId, campo, valor) => {
     if (disabled) return
-    
-    const informacoesAtualizadas = informacoesProfissionais.map(info => 
-      info.id === informacaoId 
-        ? { ...info, [campo]: checked, ...(checked ? { dataFim: '' } : {}) }
-        : info
+
+    const informacoesAtualizadas = informacoesProfissionais.map(info =>
+      info.id === informacaoId ? { ...info, [campo]: valor } : info
     )
-    
     onInformacoesProfissionaisChange(informacoesAtualizadas)
   }
-
-  const validarInformacoes = () => {
-    const novosErros = {}
-    
-    informacoesProfissionais.forEach(info => {
-      if (!info.tipo) {
-        novosErros[`tipo_${info.id}`] = 'Tipo é obrigatório'
-      }
-      
-      if (info.tipo === 'profissional') {
-        if (!info.profissao?.trim()) {
-          novosErros[`profissao_${info.id}`] = 'Profissão é obrigatória'
-        }
-        if (!info.empresa?.trim()) {
-          novosErros[`empresa_${info.id}`] = 'Empresa é obrigatória'
-        }
-        if (!info.dataInicio) {
-          novosErros[`dataInicio_${info.id}`] = 'Data de início é obrigatória'
-        }
-        if (!info.atual && !info.dataFim) {
-          novosErros[`dataFim_${info.id}`] = 'Data de fim é obrigatória quando não é emprego atual'
-        }
-      } else if (info.tipo === 'educacional') {
-        if (!info.escolaridade) {
-          novosErros[`escolaridade_${info.id}`] = 'Escolaridade é obrigatória'
-        }
-        if (!info.instituicao?.trim()) {
-          novosErros[`instituicao_${info.id}`] = 'Instituição é obrigatória'
-        }
-        if (!info.dataFormatura) {
-          novosErros[`dataFormatura_${info.id}`] = 'Data de formatura é obrigatória'
-        }
-      }
-    })
-    
-    setErrors(novosErros)
-    return Object.keys(novosErros).length === 0
-  }
-
-  const getEscolaridadeOptions = () => [
-    { value: 'fundamental-incompleto', label: 'Ensino Fundamental Incompleto' },
-    { value: 'fundamental-completo', label: 'Ensino Fundamental Completo' },
-    { value: 'medio-incompleto', label: 'Ensino Médio Incompleto' },
-    { value: 'medio-completo', label: 'Ensino Médio Completo' },
-    { value: 'superior-incompleto', label: 'Ensino Superior Incompleto' },
-    { value: 'superior-completo', label: 'Ensino Superior Completo' },
-    { value: 'pos-graduacao', label: 'Pós-graduação' },
-    { value: 'mestrado', label: 'Mestrado' },
-    { value: 'doutorado', label: 'Doutorado' }
-  ]
 
   return (
     <div className="space-y-4">
@@ -147,7 +156,7 @@ const InformacoesProfissionaisEducacionais = ({
           <Briefcase className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-semibold">Informações Profissionais e Educacionais</h3>
         </div>
-        
+
         {!disabled && (
           <Button
             type="button"
@@ -166,7 +175,7 @@ const InformacoesProfissionaisEducacionais = ({
           <CardContent className="flex flex-col items-center justify-center py-8 text-center">
             <Briefcase className="w-12 h-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
-              {disabled 
+              {disabled
                 ? 'Nenhuma informação foi adicionada'
                 : 'Nenhuma informação adicionada ainda. Clique em "Adicionar Mais" para começar.'
               }
@@ -200,12 +209,12 @@ const InformacoesProfissionaisEducacionais = ({
                   )}
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 {/* Seletor de Tipo */}
                 <div className="space-y-2">
                   <Label htmlFor={`tipo_${info.id}`}>Tipo *</Label>
-                  <Select 
+                  <Select
                     onValueChange={(value) => handleSelectChange(info.id, 'tipo', value)}
                     value={info.tipo}
                     disabled={disabled}
@@ -244,7 +253,7 @@ const InformacoesProfissionaisEducacionais = ({
                         </Alert>
                       )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor={`empresa_${info.id}`}>Empresa *</Label>
                       <Input
@@ -261,7 +270,7 @@ const InformacoesProfissionaisEducacionais = ({
                         </Alert>
                       )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor={`cargo_${info.id}`}>Cargo</Label>
                       <Input
@@ -272,7 +281,7 @@ const InformacoesProfissionaisEducacionais = ({
                         placeholder="Ex: Desenvolvedor Sênior"
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor={`dataInicio_${info.id}`}>Data de Início *</Label>
                       <Input
@@ -289,7 +298,7 @@ const InformacoesProfissionaisEducacionais = ({
                         </Alert>
                       )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
                         <input
@@ -303,7 +312,7 @@ const InformacoesProfissionaisEducacionais = ({
                         <Label htmlFor={`atual_${info.id}`}>Emprego atual</Label>
                       </div>
                     </div>
-                    
+
                     {!info.atual && (
                       <div className="space-y-2">
                         <Label htmlFor={`dataFim_${info.id}`}>Data de Fim *</Label>
@@ -329,30 +338,58 @@ const InformacoesProfissionaisEducacionais = ({
                 {info.tipo === 'educacional' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor={`escolaridade_${info.id}`}>Escolaridade *</Label>
-                      <Select 
-                        onValueChange={(value) => handleSelectChange(info.id, 'escolaridade', value)}
-                        value={info.escolaridade || ''}
+                      <Label htmlFor={`nivel_${info.id}`}>Nível *</Label>
+                      <Select
+                        onValueChange={(value) => {
+                          handleSelectChange(info.id, 'nivel', value)
+                          // Limpar área de formação quando mudar o nível
+                          // handleSelectChange(info.id, 'areaFormacao', '')
+                        }}
+                        value={info.nivel || ''}
                         disabled={disabled}
                       >
-                        <SelectTrigger className={errors[`escolaridade_${info.id}`] ? 'border-destructive' : ''}>
-                          <SelectValue placeholder="Selecione a escolaridade" />
+                        <SelectTrigger className={errors[`nivel_${info.id}`] ? 'border-destructive' : ''}>
+                          <SelectValue placeholder="Selecione o nível" />
                         </SelectTrigger>
                         <SelectContent>
-                          {getEscolaridadeOptions().map(option => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="superior">Superior</SelectItem>
+                          <SelectItem value="tecnico">Técnico</SelectItem>
                         </SelectContent>
                       </Select>
-                      {errors[`escolaridade_${info.id}`] && (
+                      {errors[`nivel_${info.id}`] && (
                         <Alert variant="destructive">
-                          <AlertDescription>{errors[`escolaridade_${info.id}`]}</AlertDescription>
+                          <AlertDescription>{errors[`nivel_${info.id}`]}</AlertDescription>
                         </Alert>
                       )}
                     </div>
-                    
+
+                    {info.nivel && (
+                      <div className="space-y-2">
+                        <Label htmlFor={`areaFormacao_${info.id}`}>Área de Formação *</Label>
+                        <Select
+                          onValueChange={(value) => handleSelectChange(info.id, 'areaFormacao', value)}
+                          value={info.areaFormacao || ''}
+                          disabled={disabled}
+                        >
+                          <SelectTrigger className={errors[`areaFormacao_${info.id}`] ? 'border-destructive' : ''}>
+                            <SelectValue placeholder="Selecione a área de formação" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {getAreasFormacao(info.nivel).map(area => (
+                              <SelectItem key={area.value} value={area.value}>
+                                {area.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {errors[`areaFormacao_${info.id}`] && (
+                          <Alert variant="destructive">
+                            <AlertDescription>{errors[`areaFormacao_${info.id}`]}</AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+                    )}
+
                     <div className="space-y-2">
                       <Label htmlFor={`instituicao_${info.id}`}>Instituição *</Label>
                       <Input
@@ -369,7 +406,7 @@ const InformacoesProfissionaisEducacionais = ({
                         </Alert>
                       )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor={`curso_${info.id}`}>Curso</Label>
                       <Input
@@ -377,25 +414,19 @@ const InformacoesProfissionaisEducacionais = ({
                         value={info.curso || ''}
                         onChange={(e) => handleInputChange(info.id, 'curso', e.target.value)}
                         disabled={disabled}
-                        placeholder="Ex: Ciência da Computação"
+                        placeholder="Ex: Bacharel em Ciência da Computação"
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
-                      <Label htmlFor={`dataFormatura_${info.id}`}>Data de Formatura *</Label>
+                      <Label htmlFor={`dataFormatura_${info.id}`}>Data de Formatura</Label>
                       <Input
                         id={`dataFormatura_${info.id}`}
                         type="date"
                         value={info.dataFormatura || ''}
                         onChange={(e) => handleInputChange(info.id, 'dataFormatura', e.target.value)}
-                        className={errors[`dataFormatura_${info.id}`] ? 'border-destructive' : ''}
                         disabled={disabled}
                       />
-                      {errors[`dataFormatura_${info.id}`] && (
-                        <Alert variant="destructive">
-                          <AlertDescription>{errors[`dataFormatura_${info.id}`]}</AlertDescription>
-                        </Alert>
-                      )}
                     </div>
                   </div>
                 )}
@@ -404,7 +435,7 @@ const InformacoesProfissionaisEducacionais = ({
           ))}
         </div>
       )}
-      
+
       {!disabled && informacoesProfissionais.length > 0 && (
         <div className="text-center">
           <Button

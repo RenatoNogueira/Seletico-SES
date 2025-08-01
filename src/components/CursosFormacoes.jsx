@@ -11,7 +11,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
 
   const adicionarCurso = () => {
     if (disabled) return
-    
+
     const novoCurso = {
       id: Date.now() + Math.random(),
       nomeCurso: '',
@@ -19,17 +19,17 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
       dataConclusao: '',
       cargaHoraria: ''
     }
-    
+
     const novosCursos = [...cursos, novoCurso]
     onCursosChange(novosCursos)
   }
 
   const removerCurso = (cursoId) => {
     if (disabled) return
-    
+
     const cursosAtualizados = cursos.filter(curso => curso.id !== cursoId)
     onCursosChange(cursosAtualizados)
-    
+
     // Limpar erros do curso removido
     const novosErros = { ...errors }
     Object.keys(novosErros).forEach(key => {
@@ -42,15 +42,15 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
 
   const handleInputChange = (cursoId, campo, valor) => {
     if (disabled) return
-    
-    const cursosAtualizados = cursos.map(curso => 
-      curso.id === cursoId 
+
+    const cursosAtualizados = cursos.map(curso =>
+      curso.id === cursoId
         ? { ...curso, [campo]: valor }
         : curso
     )
-    
+
     onCursosChange(cursosAtualizados)
-    
+
     // Limpar erro do campo
     const errorKey = `${campo}_${cursoId}`
     if (errors[errorKey]) {
@@ -62,36 +62,6 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
     }
   }
 
-  const validarCursos = () => {
-    const novosErros = {}
-    
-    cursos.forEach(curso => {
-      if (!curso.nomeCurso.trim()) {
-        novosErros[`nomeCurso_${curso.id}`] = 'Nome do curso é obrigatório'
-      }
-      
-      if (!curso.instituicao.trim()) {
-        novosErros[`instituicao_${curso.id}`] = 'Instituição é obrigatória'
-      }
-      
-      if (!curso.dataConclusao) {
-        novosErros[`dataConclusao_${curso.id}`] = 'Data de conclusão é obrigatória'
-      } else {
-        const dataAtual = new Date()
-        const dataConclusao = new Date(curso.dataConclusao)
-        if (dataConclusao > dataAtual) {
-          novosErros[`dataConclusao_${curso.id}`] = 'Data de conclusão não pode ser futura'
-        }
-      }
-      
-      if (curso.cargaHoraria && (isNaN(curso.cargaHoraria) || parseInt(curso.cargaHoraria) <= 0)) {
-        novosErros[`cargaHoraria_${curso.id}`] = 'Carga horária deve ser um número positivo'
-      }
-    })
-    
-    setErrors(novosErros)
-    return Object.keys(novosErros).length === 0
-  }
 
   return (
     <div className="space-y-4">
@@ -100,7 +70,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
           <GraduationCap className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-semibold">Cursos e Formações</h3>
         </div>
-        
+
         {!disabled && (
           <Button
             type="button"
@@ -119,7 +89,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
           <CardContent className="flex flex-col items-center justify-center py-8 text-center">
             <GraduationCap className="w-12 h-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
-              {disabled 
+              {disabled
                 ? 'Nenhum curso foi adicionado'
                 : 'Nenhum curso adicionado ainda. Clique em "Adicionar Curso" para começar.'
               }
@@ -148,7 +118,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
                   )}
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -167,7 +137,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
                       </Alert>
                     )}
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor={`instituicao_${curso.id}`}>Instituição *</Label>
                     <Input
@@ -184,7 +154,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
                       </Alert>
                     )}
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor={`dataConclusao_${curso.id}`}>Data de Conclusão *</Label>
                     <Input
@@ -201,7 +171,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
                       </Alert>
                     )}
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor={`cargaHoraria_${curso.id}`}>Carga Horária (horas)</Label>
                     <Input
@@ -226,7 +196,7 @@ const CursosFormacoes = ({ cursos, onCursosChange, disabled = false }) => {
           ))}
         </div>
       )}
-      
+
       {!disabled && cursos.length > 0 && (
         <div className="text-center">
           <Button

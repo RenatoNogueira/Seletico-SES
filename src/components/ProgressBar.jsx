@@ -13,11 +13,11 @@ const ProgressBar = ({ formData, className = '' }) => {
       { key: 'rg', label: 'RG', section: 'Informações Pessoais' },
       { key: 'dataNascimento', label: 'Data de Nascimento', section: 'Informações Pessoais' },
       { key: 'estadoCivil', label: 'Estado Civil', section: 'Informações Pessoais' },
-      
+
       // Informações de Contato
       { key: 'celular', label: 'Celular', section: 'Informações de Contato' },
       { key: 'email', label: 'Email', section: 'Informações de Contato' },
-      
+
       // Endereço
       { key: 'cep', label: 'CEP', section: 'Endereço' },
       { key: 'logradouro', label: 'Logradouro', section: 'Endereço' },
@@ -26,7 +26,7 @@ const ProgressBar = ({ formData, className = '' }) => {
       { key: 'cidade', label: 'Cidade', section: 'Endereço' },
       { key: 'estado', label: 'Estado', section: 'Endereço' }
     ]
-    
+
     return fields
   }, [])
 
@@ -41,7 +41,7 @@ const ProgressBar = ({ formData, className = '' }) => {
     // Verificar campos básicos
     requiredFields.forEach(field => {
       const isCompleted = formData[field.key] && formData[field.key].toString().trim() !== ''
-      
+
       if (isCompleted) {
         completedFields++
       }
@@ -86,10 +86,10 @@ const ProgressBar = ({ formData, className = '' }) => {
       completed: profissionalEducacionalCompleted ? 1 : 0,
       total: 1
     }
-    sections['Cursos e Formações'] = {
-      completed: cursosCompleted ? 1 : 0,
-      total: 1
-    }
+    // sections['Cursos e Formações'] = {
+    //   completed: cursosCompleted ? 1 : 0,
+    //   total: 1
+    // }
 
     const percentage = Math.round((finalCompleted / finalTotal) * 100)
 
@@ -129,12 +129,12 @@ const ProgressBar = ({ formData, className = '' }) => {
                 {progress.completed}/{progress.total} campos
               </span>
             </div>
-            
-            <Progress 
-              value={progress.percentage} 
-              className="h-2"
+
+            <Progress
+              value={progress.percentage}
+              className={`h-2 ${getProgressColor(progress.percentage)}`}
             />
-            
+
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">
                 {getProgressText(progress.percentage)}
@@ -152,7 +152,7 @@ const ProgressBar = ({ formData, className = '' }) => {
               {Object.entries(progress.sections).map(([sectionName, sectionProgress]) => {
                 const sectionPercentage = Math.round((sectionProgress.completed / sectionProgress.total) * 100)
                 const isCompleted = sectionPercentage === 100
-                
+
                 return (
                   <div key={sectionName} className="flex items-center gap-2">
                     {isCompleted ? (
@@ -189,4 +189,3 @@ const ProgressBar = ({ formData, className = '' }) => {
 }
 
 export default ProgressBar
-

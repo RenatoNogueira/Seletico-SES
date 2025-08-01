@@ -19,7 +19,7 @@ const LoginPage = ({ onLogin }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-
+    
     if (name === 'cpf') {
       // Formatar CPF automaticamente
       const formattedCPF = formatCPF(value)
@@ -27,7 +27,7 @@ const LoginPage = ({ onLogin }) => {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
-
+    
     // Limpar erro do campo quando o usuário começar a digitar
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
@@ -57,7 +57,7 @@ const LoginPage = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
+    
     if (!validateForm()) return
 
     setIsLoading(true)
@@ -74,15 +74,10 @@ const LoginPage = ({ onLogin }) => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex items-center justify-center">
-            <img
-              src="./public/preta.png" // Substitua pelo caminho real da logo
-              alt="Logo"
-              className="object-contain"
-            />
+          <div className="mx-auto mb-4 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+            <LogIn className="w-6 h-6 text-primary-foreground" />
           </div>
-
-          <CardTitle className="text-2xl font-bold">Seletivo SES</CardTitle>
+          <CardTitle className="text-2xl font-bold">Sistema de Formulário</CardTitle>
           <CardDescription>
             Entre com seu CPF e data de nascimento para acessar o formulário
           </CardDescription>
@@ -131,9 +126,9 @@ const LoginPage = ({ onLogin }) => {
               )}
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
+            <Button 
+              type="submit" 
+              className="w-full" 
               disabled={isLoading}
             >
               {isLoading ? 'Entrando...' : 'Entrar'}
@@ -141,7 +136,7 @@ const LoginPage = ({ onLogin }) => {
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p>Sistema de cadastro de dados pessoais</p>
+            <p>Sistema seguro de cadastro de dados pessoais</p>
           </div>
         </CardContent>
       </Card>

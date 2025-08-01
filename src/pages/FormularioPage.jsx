@@ -20,7 +20,8 @@ import { User, Mail, MapPin, Briefcase, Video, GraduationCap, Save, RotateCcw, L
 
 const FormularioPage = ({ userData, onSubmit, onLogout }) => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, //setIsLoading
+  ] = useState(false)
   const [showSubmitProgress, setShowSubmitProgress] = useState(false)
   const [isCepLoading, setIsCepLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -30,9 +31,23 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     nomeCompleto: '',
     cpf: userData?.cpf || '',
     rg: '',
+    orgaoExpedidor: '',
+    ufRg: '',
+    emissaoRg: '',
     dataNascimento: userData?.dataNascimento || '',
     estadoCivil: '',
     nacionalidade: 'Brasileira',
+    tituloEleitor: '',
+    zona: '',
+    secao: '',
+    carteiraReservista: '',
+    serie: '',
+    regiao: '',
+    pisPasep: '',
+
+    // Seção PcD
+    pcd: '',
+    tipoDeficiencia: '',
 
     // Informações de Contato
     telefoneFixo: '',
@@ -72,13 +87,13 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     arquivos: [],
 
     // Cursos e Formações
-    cursos: [{
-      id: Date.now(),
-      nomeCurso: '',
-      instituicao: '',
-      dataConclusao: '',
-      cargaHoraria: ''
-    }]
+    // cursos: [{
+    //   id: Date.now(),
+    //   nomeCurso: '',
+    //   instituicao: '',
+    //   dataConclusao: '',
+    //   cargaHoraria: ''
+    // }]
   })
 
   const handleInputChange = (e) => {
@@ -117,9 +132,9 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     setFormData(prev => ({ ...prev, informacoesProfissionaisEducacionais: informacoes }))
   }
 
-  const handleCursosChange = (cursos) => {
-    setFormData(prev => ({ ...prev, cursos }))
-  }
+  // const handleCursosChange = (cursos) => {
+  //   setFormData(prev => ({ ...prev, cursos }))
+  // }
 
   const handleCepBlur = async () => {
     if (formData.cep && validateCEP(formData.cep)) {
@@ -239,7 +254,8 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
 
         if (confirmCarregar) {
           // Remove a data do rascunho antes de carregar
-          const { dataRascunho, ...dadosRascunho } = rascunho
+          const { // dataRascunho,
+            ...dadosRascunho } = rascunho
           setFormData(prev => ({ ...prev, ...dadosRascunho }))
         }
       } catch (error) {
@@ -373,6 +389,83 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                       </div>
 
                       <div className="space-y-2">
+                        <Label htmlFor="orgaoExpedidor">Órgão Expedidor *</Label>
+                        <Input
+                          id="orgaoExpedidor"
+                          name="orgaoExpedidor"
+                          value={formData.orgaoExpedidor}
+                          onChange={handleInputChange}
+                          placeholder="Ex: SSP"
+                          className={errors.orgaoExpedidor ? 'border-destructive' : ''}
+                        />
+                        {errors.orgaoExpedidor && (
+                          <Alert variant="destructive">
+                            <AlertDescription>{errors.orgaoExpedidor}</AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="ufRg">UF *</Label>
+                        <Select value={formData.ufRg} onValueChange={(value) => handleSelectChange('ufRg', value)}>
+                          <SelectTrigger className={errors.ufRg ? 'border-destructive' : ''}>
+                            <SelectValue placeholder="Selecione o estado" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="AC">AC</SelectItem>
+                            <SelectItem value="AL">AL</SelectItem>
+                            <SelectItem value="AP">AP</SelectItem>
+                            <SelectItem value="AM">AM</SelectItem>
+                            <SelectItem value="BA">BA</SelectItem>
+                            <SelectItem value="CE">CE</SelectItem>
+                            <SelectItem value="DF">DF</SelectItem>
+                            <SelectItem value="ES">ES</SelectItem>
+                            <SelectItem value="GO">GO</SelectItem>
+                            <SelectItem value="MA">MA</SelectItem>
+                            <SelectItem value="MT">MT</SelectItem>
+                            <SelectItem value="MS">MS</SelectItem>
+                            <SelectItem value="MG">MG</SelectItem>
+                            <SelectItem value="PA">PA</SelectItem>
+                            <SelectItem value="PB">PB</SelectItem>
+                            <SelectItem value="PR">PR</SelectItem>
+                            <SelectItem value="PE">PE</SelectItem>
+                            <SelectItem value="PI">PI</SelectItem>
+                            <SelectItem value="RJ">RJ</SelectItem>
+                            <SelectItem value="RN">RN</SelectItem>
+                            <SelectItem value="RS">RS</SelectItem>
+                            <SelectItem value="RO">RO</SelectItem>
+                            <SelectItem value="RR">RR</SelectItem>
+                            <SelectItem value="SC">SC</SelectItem>
+                            <SelectItem value="SP">SP</SelectItem>
+                            <SelectItem value="SE">SE</SelectItem>
+                            <SelectItem value="TO">TO</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.ufRg && (
+                          <Alert variant="destructive">
+                            <AlertDescription>{errors.ufRg}</AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="emissaoRg">Emissão *</Label>
+                        <Input
+                          id="emissaoRg"
+                          name="emissaoRg"
+                          type="date"
+                          value={formData.emissaoRg}
+                          onChange={handleInputChange}
+                          className={errors.emissaoRg ? 'border-destructive' : ''}
+                        />
+                        {errors.emissaoRg && (
+                          <Alert variant="destructive">
+                            <AlertDescription>{errors.emissaoRg}</AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
                         <Label htmlFor="dataNascimento">Data de Nascimento *</Label>
                         <Input
                           id="dataNascimento"
@@ -420,6 +513,158 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           onChange={handleInputChange}
                         />
                       </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="tituloEleitor">Título de Eleitor</Label>
+                        <Input
+                          id="tituloEleitor"
+                          name="tituloEleitor"
+                          value={formData.tituloEleitor}
+                          onChange={handleInputChange}
+                          placeholder="Ex: 1234567890123"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="zona">Zona</Label>
+                        <Input
+                          id="zona"
+                          name="zona"
+                          value={formData.zona}
+                          onChange={handleInputChange}
+                          placeholder="Ex: 001"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="secao">Seção</Label>
+                        <Input
+                          id="secao"
+                          name="secao"
+                          value={formData.secao}
+                          onChange={handleInputChange}
+                          placeholder="Ex: 0123"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="carteiraReservista">Carteira de Reservista</Label>
+                        <Input
+                          id="carteiraReservista"
+                          name="carteiraReservista"
+                          value={formData.carteiraReservista}
+                          onChange={handleInputChange}
+                          placeholder="Ex: 123456789"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="serie">Série</Label>
+                        <Input
+                          id="serie"
+                          name="serie"
+                          value={formData.serie}
+                          onChange={handleInputChange}
+                          placeholder="Ex: 12"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="regiao">Região</Label>
+                        <Input
+                          id="regiao"
+                          name="regiao"
+                          value={formData.regiao}
+                          onChange={handleInputChange}
+                          placeholder="Ex: 1ª RM"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="pisPasep">PIS/PASEP</Label>
+                        <Input
+                          id="pisPasep"
+                          name="pisPasep"
+                          value={formData.pisPasep}
+                          onChange={handleInputChange}
+                          placeholder="Ex: 12345678901"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Seção PcD */}
+                  <div data-section="pcd">
+                    <div className="flex items-center gap-2 mb-4">
+                      <User className="w-5 h-5 text-primary" />
+                      <h3 className="text-lg font-semibold">Pessoa com Deficiência (PcD)</h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>PcD? *</Label>
+                        <div className="flex gap-4">
+                          <label className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              name="pcd"
+                              value="sim"
+                              checked={formData.pcd === 'sim'}
+                              onChange={handleInputChange}
+                              className="w-4 h-4"
+                            />
+                            <span>Sim</span>
+                          </label>
+                          <label className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              name="pcd"
+                              value="nao"
+                              checked={formData.pcd === 'nao'}
+                              onChange={handleInputChange}
+                              className="w-4 h-4"
+                            />
+                            <span>Não</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      {formData.pcd === 'sim' && (
+                        <div className="space-y-2">
+                          <Label>Tipo de Deficiência *</Label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {['Física', 'Visual', 'Auditiva', 'Mental', 'Intelectual'].map((tipo) => (
+                              <label key={tipo} className="flex items-center space-x-2">
+                                <input
+                                  type="checkbox"
+                                  name="tipoDeficiencia"
+                                  value={tipo.toLowerCase()}
+                                  checked={formData.tipoDeficiencia.includes(tipo.toLowerCase())}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    const currentTypes = formData.tipoDeficiencia.split(',').filter(t => t.trim());
+                                    if (e.target.checked) {
+                                      setFormData(prev => ({
+                                        ...prev,
+                                        tipoDeficiencia: [...currentTypes, value].join(',')
+                                      }));
+                                    } else {
+                                      setFormData(prev => ({
+                                        ...prev,
+                                        tipoDeficiencia: currentTypes.filter(t => t !== value).join(',')
+                                      }));
+                                    }
+                                  }}
+                                  className="w-4 h-4"
+                                />
+                                <span>{tipo}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -688,13 +933,13 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                   <Separator />
 
                   {/* Cursos e Formações */}
-                  <div data-section="cursos-formacoes">
+                  {/* <div data-section="cursos-formacoes">
                     <CursosFormacoes
                       cursos={formData.cursos}
                       onCursosChange={handleCursosChange}
                       disabled={false}
                     />
-                  </div>
+                  </div> */}
 
                   <Separator />
 
