@@ -76,7 +76,7 @@ const LoginPage = ({ onLogin }) => {
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex items-center justify-center">
             <img
-              src="/public/preta.png" // Substitua pelo caminho real da logo
+              src="./public/preta.png" // Substitua pelo caminho real da logo
               alt="Logo"
               className="object-contain"
             />
