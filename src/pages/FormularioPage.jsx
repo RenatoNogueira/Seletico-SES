@@ -17,6 +17,7 @@ import SubmitProgressModal from '../components/SubmitProgressModal'
 import { validateCPF, formatCPF, validateEmail, validateCEP, formatCEP, validateVideoURL } from '../utils/validations'
 import { fetchAddressByCEP } from '../utils/cepService'
 import { User, Mail, MapPin, Briefcase, Video, GraduationCap, Save, RotateCcw, Loader2, Upload, BookmarkPlus, LogOut } from 'lucide-react'
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const FormularioPage = ({ userData, onSubmit, onLogout }) => {
   const navigate = useNavigate()
@@ -94,7 +95,9 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     //   dataConclusao: '',
     //   cargaHoraria: ''
     // }]
+    
   })
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -195,22 +198,31 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+const handleKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+  }
+};  
 
-    if (!validateForm()) {
-      // Scroll para o primeiro erro
-      const firstErrorField = Object.keys(errors)[0]
-      const element = document.getElementById(firstErrorField)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }
-      return
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setShowConfirmationModal(true); // Mostra o modal de confirmação em vez de validar direto
+};
+
+const handleConfirmSubmit = () => {
+  setShowConfirmationModal(false);
+  
+  if (!validateForm()) {
+    const firstErrorField = Object.keys(errors)[0];
+    const element = document.getElementById(firstErrorField);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-
-    setShowSubmitProgress(true)
+    return;
   }
 
+  setShowSubmitProgress(true);
+};
   const handleSubmitComplete = () => {
     setShowSubmitProgress(false)
     onSubmit(formData)
@@ -314,10 +326,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Barra de Progresso - Sidebar Esquerda */}
+          {/* Barra de Progresso - Sidebar Esquerda 
           <div className="lg:col-span-1">
             <ProgressBar formData={formData} />
-          </div>
+          </div>*/}
 
           {/* Formulário Principal */}
           <div className="lg:col-span-3">
@@ -345,6 +357,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="nomeCompleto"
                           value={formData.nomeCompleto}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.nomeCompleto ? 'border-destructive' : ''}
                         />
                         {errors.nomeCompleto && (
@@ -361,6 +374,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="cpf"
                           value={formData.cpf}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.cpf ? 'border-destructive' : ''}
                           maxLength={14}
                           disabled
@@ -379,6 +393,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="rg"
                           value={formData.rg}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.rg ? 'border-destructive' : ''}
                         />
                         {errors.rg && (
@@ -395,6 +410,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="orgaoExpedidor"
                           value={formData.orgaoExpedidor}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           placeholder="Ex: SSP"
                           className={errors.orgaoExpedidor ? 'border-destructive' : ''}
                         />
@@ -456,6 +472,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="date"
                           value={formData.emissaoRg}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.emissaoRg ? 'border-destructive' : ''}
                         />
                         {errors.emissaoRg && (
@@ -473,6 +490,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="date"
                           value={formData.dataNascimento}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.dataNascimento ? 'border-destructive' : ''}
                           disabled
                         />
@@ -511,91 +529,17 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="nacionalidade"
                           value={formData.nacionalidade}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="tituloEleitor">Título de Eleitor</Label>
-                        <Input
-                          id="tituloEleitor"
-                          name="tituloEleitor"
-                          value={formData.tituloEleitor}
-                          onChange={handleInputChange}
-                          placeholder="Ex: 1234567890123"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="zona">Zona</Label>
-                        <Input
-                          id="zona"
-                          name="zona"
-                          value={formData.zona}
-                          onChange={handleInputChange}
-                          placeholder="Ex: 001"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="secao">Seção</Label>
-                        <Input
-                          id="secao"
-                          name="secao"
-                          value={formData.secao}
-                          onChange={handleInputChange}
-                          placeholder="Ex: 0123"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="carteiraReservista">Carteira de Reservista</Label>
-                        <Input
-                          id="carteiraReservista"
-                          name="carteiraReservista"
-                          value={formData.carteiraReservista}
-                          onChange={handleInputChange}
-                          placeholder="Ex: 123456789"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="serie">Série</Label>
-                        <Input
-                          id="serie"
-                          name="serie"
-                          value={formData.serie}
-                          onChange={handleInputChange}
-                          placeholder="Ex: 12"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="regiao">Região</Label>
-                        <Input
-                          id="regiao"
-                          name="regiao"
-                          value={formData.regiao}
-                          onChange={handleInputChange}
-                          placeholder="Ex: 1ª RM"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="pisPasep">PIS/PASEP</Label>
-                        <Input
-                          id="pisPasep"
-                          name="pisPasep"
-                          value={formData.pisPasep}
-                          onChange={handleInputChange}
-                          placeholder="Ex: 12345678901"
-                        />
-                      </div>
+                     
                     </div>
                   </div>
 
                   <Separator />
 
-                  {/* Seção PcD */}
+                  {/* Seção PcD 
                   <div data-section="pcd">
                     <div className="flex items-center gap-2 mb-4">
                       <User className="w-5 h-5 text-primary" />
@@ -668,7 +612,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                     </div>
                   </div>
 
-                  <Separator />
+                  <Separator />*/}
 
                   {/* Informações de Contato */}
                   <div data-section="informacoes-contato">
@@ -685,6 +629,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="telefoneFixo"
                           value={formData.telefoneFixo}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           placeholder="(11) 1234-5678"
                         />
                       </div>
@@ -696,6 +641,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="celular"
                           value={formData.celular}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.celular ? 'border-destructive' : ''}
                           placeholder="(11) 91234-5678"
                         />
@@ -714,6 +660,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="email"
                           value={formData.email}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.email ? 'border-destructive' : ''}
                         />
                         {errors.email && (
@@ -731,6 +678,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="email"
                           value={formData.emailAlternativo}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.emailAlternativo ? 'border-destructive' : ''}
                         />
                         {errors.emailAlternativo && (
@@ -760,6 +708,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                             name="cep"
                             value={formData.cep}
                             onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
                             onBlur={handleCepBlur}
                             className={errors.cep ? 'border-destructive' : ''}
                             placeholder="00000-000"
@@ -783,6 +732,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="logradouro"
                           value={formData.logradouro}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.logradouro ? 'border-destructive' : ''}
                         />
                         {errors.logradouro && (
@@ -799,6 +749,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="numero"
                           value={formData.numero}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.numero ? 'border-destructive' : ''}
                         />
                         {errors.numero && (
@@ -815,6 +766,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="complemento"
                           value={formData.complemento}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                         />
                       </div>
 
@@ -825,6 +777,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="bairro"
                           value={formData.bairro}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.bairro ? 'border-destructive' : ''}
                         />
                         {errors.bairro && (
@@ -841,6 +794,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="cidade"
                           value={formData.cidade}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.cidade ? 'border-destructive' : ''}
                         />
                         {errors.cidade && (
@@ -857,6 +811,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="estado"
                           value={formData.estado}
                           onChange={handleInputChange}
+                          onKeyDown={handleKeyDown}
                           className={errors.estado ? 'border-destructive' : ''}
                         />
                         {errors.estado && (
@@ -884,17 +839,18 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                   <div data-section="video-pessoal">
                     <div className="flex items-center gap-2 mb-4">
                       <Video className="w-5 h-5 text-primary" />
-                      <h3 className="text-lg font-semibold">Link do Vídeo Pessoal</h3>
+                      <h3 className="text-lg font-semibold">Link do Pitch Vídeo</h3>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="linkVideo">URL do Vídeo (YouTube, Vimeo, etc.)</Label>
+                      <Label htmlFor="linkVideo">URL do Vídeo (YouTube, Google Drive, Vimeo, etc.) com no máximo 3 minutos </Label>
                       <Input
                         id="linkVideo"
                         name="linkVideo"
                         type="url"
                         value={formData.linkVideo}
                         onChange={handleInputChange}
+                        onKeyDown={handleKeyDown}
                         className={errors.linkVideo ? 'border-destructive' : ''}
                         placeholder="https://www.youtube.com/watch?v=..."
                       />
@@ -1004,12 +960,18 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
         </div>
       </div>
 
-      {/* Modal de Progresso de Envio */}
-      <SubmitProgressModal
-        isOpen={showSubmitProgress}
-        onComplete={handleSubmitComplete}
-      />
-    </div>
+    {/* ADICIONE AQUI OS MODAIS */}
+    <ConfirmationModal
+      isOpen={showConfirmationModal}
+      onConfirm={handleConfirmSubmit}
+      onCancel={() => setShowConfirmationModal(false)}
+    />
+    
+    <SubmitProgressModal
+      isOpen={showSubmitProgress}
+      onComplete={handleSubmitComplete}
+    />
+  </div>
   )
 }
 
