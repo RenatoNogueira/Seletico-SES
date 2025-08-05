@@ -17,6 +17,10 @@ import SubmitProgressModal from '../components/SubmitProgressModal'
 import { validateCPF, formatCPF, validateEmail, validateCEP, formatCEP, validateVideoURL } from '../utils/validations'
 import { fetchAddressByCEP } from '../utils/cepService'
 import { User, Mail, MapPin, Briefcase, Video, GraduationCap, Save, RotateCcw, Loader2, Upload, BookmarkPlus, LogOut } from 'lucide-react'
+<<<<<<< HEAD
+=======
+import ConfirmationModal from '../components/ConfirmationModal';
+>>>>>>> f9d642a (Att Guilherme)
 
 const FormularioPage = ({ userData, onSubmit, onLogout }) => {
   const navigate = useNavigate()
@@ -94,7 +98,13 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     //   dataConclusao: '',
     //   cargaHoraria: ''
     // }]
+<<<<<<< HEAD
   })
+=======
+    
+  })
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+>>>>>>> f9d642a (Att Guilherme)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -195,6 +205,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     return Object.keys(newErrors).length === 0
   }
 
+<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -211,6 +222,33 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     setShowSubmitProgress(true)
   }
 
+=======
+const handleKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+  }
+};  
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setShowConfirmationModal(true); // Mostra o modal de confirmação em vez de validar direto
+};
+
+const handleConfirmSubmit = () => {
+  setShowConfirmationModal(false);
+  
+  if (!validateForm()) {
+    const firstErrorField = Object.keys(errors)[0];
+    const element = document.getElementById(firstErrorField);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return;
+  }
+
+  setShowSubmitProgress(true);
+};
+>>>>>>> f9d642a (Att Guilherme)
   const handleSubmitComplete = () => {
     setShowSubmitProgress(false)
     onSubmit(formData)
@@ -241,7 +279,11 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
       navigate('/') // Navega para página de login
     }
   }
+<<<<<<< HEAD
 
+=======
+{/*
+>>>>>>> f9d642a (Att Guilherme)
   // Carregar rascunho ao inicializar
   useEffect(() => {
     const rascunhoSalvo = localStorage.getItem('formulario_rascunho')
@@ -262,7 +304,11 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
         console.error('Erro ao carregar rascunho:', error)
       }
     }
+<<<<<<< HEAD
   }, [])
+=======
+  }, [])*/}
+>>>>>>> f9d642a (Att Guilherme)
 
   const handleClearForm = () => {
     setFormData({
@@ -314,10 +360,17 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+<<<<<<< HEAD
           {/* Barra de Progresso - Sidebar Esquerda */}
           <div className="lg:col-span-1">
             <ProgressBar formData={formData} />
           </div>
+=======
+          {/* Barra de Progresso - Sidebar Esquerda 
+          <div className="lg:col-span-1">
+            <ProgressBar formData={formData} />
+          </div>*/}
+>>>>>>> f9d642a (Att Guilherme)
 
           {/* Formulário Principal */}
           <div className="lg:col-span-3">
@@ -345,6 +398,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="nomeCompleto"
                           value={formData.nomeCompleto}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.nomeCompleto ? 'border-destructive' : ''}
                         />
                         {errors.nomeCompleto && (
@@ -361,6 +418,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="cpf"
                           value={formData.cpf}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.cpf ? 'border-destructive' : ''}
                           maxLength={14}
                           disabled
@@ -379,6 +440,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="rg"
                           value={formData.rg}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.rg ? 'border-destructive' : ''}
                         />
                         {errors.rg && (
@@ -395,6 +460,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="orgaoExpedidor"
                           value={formData.orgaoExpedidor}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           placeholder="Ex: SSP"
                           className={errors.orgaoExpedidor ? 'border-destructive' : ''}
                         />
@@ -456,6 +525,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="date"
                           value={formData.emissaoRg}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.emissaoRg ? 'border-destructive' : ''}
                         />
                         {errors.emissaoRg && (
@@ -473,6 +546,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="date"
                           value={formData.dataNascimento}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.dataNascimento ? 'border-destructive' : ''}
                           disabled
                         />
@@ -511,6 +588,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="nacionalidade"
                           value={formData.nacionalidade}
                           onChange={handleInputChange}
+<<<<<<< HEAD
                         />
                       </div>
 
@@ -590,12 +668,23 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           placeholder="Ex: 12345678901"
                         />
                       </div>
+=======
+                          onKeyDown={handleKeyDown}
+                        />
+                      </div>
+
+                     
+>>>>>>> f9d642a (Att Guilherme)
                     </div>
                   </div>
 
                   <Separator />
 
+<<<<<<< HEAD
                   {/* Seção PcD */}
+=======
+                  {/* Seção PcD 
+>>>>>>> f9d642a (Att Guilherme)
                   <div data-section="pcd">
                     <div className="flex items-center gap-2 mb-4">
                       <User className="w-5 h-5 text-primary" />
@@ -668,7 +757,11 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                     </div>
                   </div>
 
+<<<<<<< HEAD
                   <Separator />
+=======
+                  <Separator />*/}
+>>>>>>> f9d642a (Att Guilherme)
 
                   {/* Informações de Contato */}
                   <div data-section="informacoes-contato">
@@ -685,6 +778,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="telefoneFixo"
                           value={formData.telefoneFixo}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           placeholder="(11) 1234-5678"
                         />
                       </div>
@@ -696,6 +793,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="celular"
                           value={formData.celular}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.celular ? 'border-destructive' : ''}
                           placeholder="(11) 91234-5678"
                         />
@@ -714,6 +815,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="email"
                           value={formData.email}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.email ? 'border-destructive' : ''}
                         />
                         {errors.email && (
@@ -731,6 +836,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           type="email"
                           value={formData.emailAlternativo}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.emailAlternativo ? 'border-destructive' : ''}
                         />
                         {errors.emailAlternativo && (
@@ -760,6 +869,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                             name="cep"
                             value={formData.cep}
                             onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                            onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                             onBlur={handleCepBlur}
                             className={errors.cep ? 'border-destructive' : ''}
                             placeholder="00000-000"
@@ -783,6 +896,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="logradouro"
                           value={formData.logradouro}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.logradouro ? 'border-destructive' : ''}
                         />
                         {errors.logradouro && (
@@ -799,6 +916,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="numero"
                           value={formData.numero}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.numero ? 'border-destructive' : ''}
                         />
                         {errors.numero && (
@@ -815,6 +936,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="complemento"
                           value={formData.complemento}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                         />
                       </div>
 
@@ -825,6 +950,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="bairro"
                           value={formData.bairro}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.bairro ? 'border-destructive' : ''}
                         />
                         {errors.bairro && (
@@ -841,6 +970,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="cidade"
                           value={formData.cidade}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.cidade ? 'border-destructive' : ''}
                         />
                         {errors.cidade && (
@@ -857,6 +990,10 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                           name="estado"
                           value={formData.estado}
                           onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                          onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                           className={errors.estado ? 'border-destructive' : ''}
                         />
                         {errors.estado && (
@@ -884,17 +1021,29 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                   <div data-section="video-pessoal">
                     <div className="flex items-center gap-2 mb-4">
                       <Video className="w-5 h-5 text-primary" />
+<<<<<<< HEAD
                       <h3 className="text-lg font-semibold">Link do Vídeo Pessoal</h3>
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="linkVideo">URL do Vídeo (YouTube, Vimeo, etc.)</Label>
+=======
+                      <h3 className="text-lg font-semibold">Link do Pitch Vídeo</h3>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="linkVideo">URL do Vídeo (YouTube, Google Drive, Vimeo, etc.) com no máximo 3 minutos </Label>
+>>>>>>> f9d642a (Att Guilherme)
                       <Input
                         id="linkVideo"
                         name="linkVideo"
                         type="url"
                         value={formData.linkVideo}
                         onChange={handleInputChange}
+<<<<<<< HEAD
+=======
+                        onKeyDown={handleKeyDown}
+>>>>>>> f9d642a (Att Guilherme)
                         className={errors.linkVideo ? 'border-destructive' : ''}
                         placeholder="https://www.youtube.com/watch?v=..."
                       />
@@ -955,7 +1104,11 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                         <LogOut className="w-4 h-4" />
                         Sair
                       </Button>
+<<<<<<< HEAD
 
+=======
+{/* 
+>>>>>>> f9d642a (Att Guilherme)
                       <Button
                         type="button"
                         variant="outline"
@@ -964,7 +1117,11 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
                       >
                         <BookmarkPlus className="w-4 h-4" />
                         Salvar Rascunho
+<<<<<<< HEAD
                       </Button>
+=======
+                      </Button>*/}
+>>>>>>> f9d642a (Att Guilherme)
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-2">
@@ -1004,12 +1161,27 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Modal de Progresso de Envio */}
       <SubmitProgressModal
         isOpen={showSubmitProgress}
         onComplete={handleSubmitComplete}
       />
     </div>
+=======
+    {/* ADICIONE AQUI OS MODAIS */}
+    <ConfirmationModal
+      isOpen={showConfirmationModal}
+      onConfirm={handleConfirmSubmit}
+      onCancel={() => setShowConfirmationModal(false)}
+    />
+    
+    <SubmitProgressModal
+      isOpen={showSubmitProgress}
+      onComplete={handleSubmitComplete}
+    />
+  </div>
+>>>>>>> f9d642a (Att Guilherme)
   )
 }
 

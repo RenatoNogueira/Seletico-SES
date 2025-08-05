@@ -19,7 +19,11 @@ const LoginPage = ({ onLogin }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> f9d642a (Att Guilherme)
     if (name === 'cpf') {
       // Formatar CPF automaticamente
       const formattedCPF = formatCPF(value)
@@ -27,7 +31,11 @@ const LoginPage = ({ onLogin }) => {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> f9d642a (Att Guilherme)
     // Limpar erro do campo quando o usuário começar a digitar
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
@@ -57,7 +65,11 @@ const LoginPage = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> f9d642a (Att Guilherme)
     if (!validateForm()) return
 
     setIsLoading(true)
@@ -74,9 +86,20 @@ const LoginPage = ({ onLogin }) => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
+<<<<<<< HEAD
           <div className="mx-auto mb-4 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
             <LogIn className="w-6 h-6 text-primary-foreground" />
           </div>
+=======
+          <div className="mx-auto mb-4 flex items-center justify-center overflow-hidden">
+            <img
+              src="/public/preta.png"
+              alt="Logo"
+              className="object-contain"
+            />
+          </div>
+
+>>>>>>> f9d642a (Att Guilherme)
           <CardTitle className="text-2xl font-bold">Sistema de Formulário</CardTitle>
           <CardDescription>
             Entre com seu CPF e data de nascimento para acessar o formulário
@@ -126,9 +149,15 @@ const LoginPage = ({ onLogin }) => {
               )}
             </div>
 
+<<<<<<< HEAD
             <Button 
               type="submit" 
               className="w-full" 
+=======
+            <Button
+              type="submit"
+              className="w-full"
+>>>>>>> f9d642a (Att Guilherme)
               disabled={isLoading}
             >
               {isLoading ? 'Entrando...' : 'Entrar'}

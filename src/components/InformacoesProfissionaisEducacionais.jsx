@@ -19,7 +19,11 @@ const InformacoesProfissionaisEducacionais = ({
     if (nivel === 'tecnico') {
       return [
         { value: 'tecnico_administracao', label: 'Técnico em Administração' },
+<<<<<<< HEAD
         { value: 'tecnico_enfermagem', label: 'Técnico em Enfermagem' },
+=======
+        { value: 'tecnico_enfermagem*', label: 'Técnico em Enfermagem*' },
+>>>>>>> f9d642a (Att Guilherme)
         { value: 'tecnico_eletrotecnica', label: 'Técnico em Eletrotécnica' },
         { value: 'tecnico_massoterapia', label: 'Técnico em Massoterapia' }
       ]
@@ -29,6 +33,7 @@ const InformacoesProfissionaisEducacionais = ({
         { value: 'ciencias_contabeis', label: 'Ciências Contábeis' },
         { value: 'ciencias_computacao', label: 'Ciências da Computação' },
         { value: 'ciencias_economicas', label: 'Ciências Econômicas' },
+<<<<<<< HEAD
         { value: 'comunicacao_social', label: 'Comunicação Social/Jornalismo' },
         { value: 'direito', label: 'Direito' },
         { value: 'enfermagem', label: 'Enfermagem' },
@@ -37,6 +42,16 @@ const InformacoesProfissionaisEducacionais = ({
         { value: 'nutricao', label: 'Nutrição' },
         { value: 'pedagogia', label: 'Pedagogia' },
         { value: 'psicologia', label: 'Psicologia' }
+=======
+        { value: 'comunicacao_social*', label: 'Comunicação Social/Jornalismo*' },
+        { value: 'direito*', label: 'Direito*' },
+        { value: 'enfermagem*', label: 'Enfermagem*' },
+        { value: 'fisioterapia*', label: 'Fisioterapia*' },
+        { value: 'medicina*', label: 'Medicina*' },
+        { value: 'nutricao*', label: 'Nutrição*' },
+        { value: 'pedagogia*', label: 'Pedagogia*' },
+        { value: 'psicologia*', label: 'Psicologia*' }
+>>>>>>> f9d642a (Att Guilherme)
       ]
     }
     return []
@@ -47,7 +62,11 @@ const InformacoesProfissionaisEducacionais = ({
 
     const novaInformacao = {
       id: Date.now() + Math.random(),
+<<<<<<< HEAD
       tipo: 'profissional', // 'profissional' ou 'educacional'
+=======
+      tipo: 'educacional', // Alterado para sempre ser educacional
+>>>>>>> f9d642a (Att Guilherme)
       profissao: '',
       empresa: '',
       cargo: '',
@@ -59,7 +78,12 @@ const InformacoesProfissionaisEducacionais = ({
       curso: '',
       dataFormatura: '',
       nivel: '', // 'superior' ou 'tecnico'
+<<<<<<< HEAD
       areaFormacao: '' // área específica baseada no nível
+=======
+      areaFormacao: '', // área específica baseada no nível
+      numeroRegistro: '' // Novo campo para o número de registro
+>>>>>>> f9d642a (Att Guilherme)
     }
 
     const novasInformacoes = [...informacoesProfissionais, novaInformacao]
@@ -105,6 +129,14 @@ const InformacoesProfissionaisEducacionais = ({
       if (info.id === informacaoId) {
         const infoAtualizada = { ...info, [campo]: valor }
 
+<<<<<<< HEAD
+=======
+        // Se mudou a área de formação, resetar o número de registro
+        if (campo === 'areaFormacao') {
+          infoAtualizada.numeroRegistro = ''
+        }
+        
+>>>>>>> f9d642a (Att Guilherme)
         // Se mudou o tipo, limpar campos específicos
         if (campo === 'tipo') {
           if (valor === 'educacional') {
@@ -140,6 +172,7 @@ const InformacoesProfissionaisEducacionais = ({
     }
   }
 
+<<<<<<< HEAD
   const handleCheckboxChange = (informacaoId, campo, valor) => {
     if (disabled) return
 
@@ -169,6 +202,22 @@ const InformacoesProfissionaisEducacionais = ({
           </Button>
         )}
       </div>
+=======
+
+  return (
+<div className="space-y-4">
+  <div className="flex flex-col gap-1">
+    <div className="flex items-start gap-2"> {/* items-start para alinhar no topo */}
+      <Briefcase className="w-5 h-5 text-primary mt-0.5" /> {/* Adicionado mt para ajuste fino */}
+      <div>
+        <h3 className="text-lg font-semibold">Área de Formação</h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          As áreas de formação com * exigem a indicação do número do registro profissional
+        </p>
+      </div>
+    </div>
+  </div>
+>>>>>>> f9d642a (Att Guilherme)
 
       {informacoesProfissionais.length === 0 ? (
         <Card className="border-dashed">
@@ -194,7 +243,11 @@ const InformacoesProfissionaisEducacionais = ({
                     ) : (
                       <GraduationCap className="w-4 h-4" />
                     )}
+<<<<<<< HEAD
                     {info.tipo === 'profissional' ? 'Experiência Profissional' : 'Formação Educacional'} {index + 1}
+=======
+                    {info.tipo === 'educacional' ? 'Experiência Profissional' : 'Formação Educacional'} {}
+>>>>>>> f9d642a (Att Guilherme)
                   </CardTitle>
                   {!disabled && informacoesProfissionais.length > 1 && (
                     <Button
@@ -211,11 +264,19 @@ const InformacoesProfissionaisEducacionais = ({
               </CardHeader>
 
               <CardContent className="space-y-4">
+<<<<<<< HEAD
                 {/* Seletor de Tipo */}
                 <div className="space-y-2">
                   <Label htmlFor={`tipo_${info.id}`}>Tipo *</Label>
                   <Select
                     onValueChange={(value) => handleSelectChange(info.id, 'tipo', value)}
+=======
+                {/* Seletor de Tipo 
+                <div className="space-y-2">
+                  <Label htmlFor={`tipo_${info.id}`}>Tipo *</Label>
+                  <Select
+                    onValueChange={(value) => handleSelectChange(info.id, 'tipo', value = "educacional")}
+>>>>>>> f9d642a (Att Guilherme)
                     value={info.tipo}
                     disabled={disabled}
                   >
@@ -223,7 +284,10 @@ const InformacoesProfissionaisEducacionais = ({
                       <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
                     <SelectContent>
+<<<<<<< HEAD
                       <SelectItem value="profissional">Experiência Profissional</SelectItem>
+=======
+>>>>>>> f9d642a (Att Guilherme)
                       <SelectItem value="educacional">Formação Educacional</SelectItem>
                     </SelectContent>
                   </Select>
@@ -232,9 +296,15 @@ const InformacoesProfissionaisEducacionais = ({
                       <AlertDescription>{errors[`tipo_${info.id}`]}</AlertDescription>
                     </Alert>
                   )}
+<<<<<<< HEAD
                 </div>
 
                 {/* Campos para Experiência Profissional */}
+=======
+                </div>*/}
+
+                {/* Campos para Experiência Profissional 
+>>>>>>> f9d642a (Att Guilherme)
                 {info.tipo === 'profissional' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -332,10 +402,17 @@ const InformacoesProfissionaisEducacionais = ({
                       </div>
                     )}
                   </div>
+<<<<<<< HEAD
                 )}
 
                 {/* Campos para Formação Educacional */}
                 {info.tipo === 'educacional' && (
+=======
+                )}*/}
+
+                {/* Campos para Formação Educacional */}
+                {info.tipo === 'profissional' && (
+>>>>>>> f9d642a (Att Guilherme)
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor={`nivel_${info.id}`}>Nível *</Label>
@@ -364,6 +441,7 @@ const InformacoesProfissionaisEducacionais = ({
                     </div>
 
                     {info.nivel && (
+<<<<<<< HEAD
                       <div className="space-y-2">
                         <Label htmlFor={`areaFormacao_${info.id}`}>Área de Formação *</Label>
                         <Select
@@ -390,6 +468,57 @@ const InformacoesProfissionaisEducacionais = ({
                       </div>
                     )}
 
+=======
+                        <div className="space-y-2">
+                          <Label htmlFor={`areaFormacao_${info.id}`}>Área de Formação *</Label>
+                          
+                          <Select
+                            onValueChange={(value) => handleSelectChange(info.id, 'areaFormacao', value)}
+                            value={info.areaFormacao || ''}
+                            disabled={disabled}
+                          >
+                            <SelectTrigger className={errors[`areaFormacao_${info.id}`] ? 'border-destructive' : ''}>
+                              <SelectValue placeholder="Selecione a área de formação" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {getAreasFormacao(info.nivel).map(area => (
+                                <SelectItem key={area.value} value={area.value}>
+                                  {area.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {errors[`areaFormacao_${info.id}`] && (
+                            <Alert variant="destructive">
+                              <AlertDescription>{errors[`areaFormacao_${info.id}`]}</AlertDescription>
+                            </Alert>
+                          )}
+
+ {/* Campo para número de registro (aparece apenas para áreas com *) */}
+                      {info.areaFormacao && info.areaFormacao.includes('*') && (
+                            <div className="mt-3 space-y-2">
+                              <Label htmlFor={`registro_${info.id}`}>
+                                Número de Registro Profissional *
+                              </Label>
+                              <Input
+                                id={`registro_${info.id}`}
+                                value={info.numeroRegistro || ''}
+                                onChange={(e) => handleInputChange(info.id, 'numeroRegistro', e.target.value)}
+                                disabled={disabled}
+                                placeholder="ex: 000000-G/MA"
+                                className={errors[`numeroRegistro_${info.id}`] ? 'border-destructive' : ''}
+                              />
+                              {errors[`numeroRegistro_${info.id}`] && (
+                                <Alert variant="destructive">
+                                  <AlertDescription>{errors[`numeroRegistro_${info.id}`]}</AlertDescription>
+                                </Alert>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    {/* 
+>>>>>>> f9d642a (Att Guilherme)
                     <div className="space-y-2">
                       <Label htmlFor={`instituicao_${info.id}`}>Instituição *</Label>
                       <Input
@@ -427,7 +556,11 @@ const InformacoesProfissionaisEducacionais = ({
                         onChange={(e) => handleInputChange(info.id, 'dataFormatura', e.target.value)}
                         disabled={disabled}
                       />
+<<<<<<< HEAD
                     </div>
+=======
+                    </div>*/}
+>>>>>>> f9d642a (Att Guilherme)
                   </div>
                 )}
               </CardContent>
@@ -435,7 +568,11 @@ const InformacoesProfissionaisEducacionais = ({
           ))}
         </div>
       )}
+<<<<<<< HEAD
 
+=======
+{/* 
+>>>>>>> f9d642a (Att Guilherme)
       {!disabled && informacoesProfissionais.length > 0 && (
         <div className="text-center">
           <Button
@@ -448,7 +585,11 @@ const InformacoesProfissionaisEducacionais = ({
             Adicionar Mais
           </Button>
         </div>
+<<<<<<< HEAD
       )}
+=======
+      )}*/}
+>>>>>>> f9d642a (Att Guilherme)
     </div>
   )
 }
