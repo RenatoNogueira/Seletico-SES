@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle, User, Mail, MapPin, Briefcase, Video, Upload, GraduationCap, Home, FileText, Edit, AlertTriangle } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 const SucessoPage = ({ data, onEdit }) => {
   const navigate = useNavigate()
@@ -55,6 +56,26 @@ const SucessoPage = ({ data, onEdit }) => {
     if (onEdit) {
       onEdit(data)
     }
+      useEffect(() => {
+    const rascunhoSalvo = localStorage.getItem('formulario_rascunho')
+    if (rascunhoSalvo) {
+      try {
+        const rascunho = JSON.parse(rascunhoSalvo)
+        const confirmCarregar = window.confirm(
+          `Encontramos um rascunho salvo em ${new Date(rascunho.dataRascunho).toLocaleString('pt-BR')}.\n\nDeseja carregar os dados salvos?`
+        )
+
+        if (confirmCarregar) {
+          // Remove a data do rascunho antes de carregar
+          const { // dataRascunho,
+            ...dadosRascunho } = rascunho
+          setFormData(prev => ({ ...prev, ...dadosRascunho }))
+        }
+      } catch (error) {
+        console.error('Erro ao carregar rascunho:', error)
+      }
+    }
+  }, [])
     navigate('/formulario')
   }
 
@@ -86,7 +107,7 @@ const SucessoPage = ({ data, onEdit }) => {
               Formulário Enviado com Sucesso!
             </h1>
             <p className="text-muted-foreground">
-              Seus dados foram recebidos e processados com sucesso.
+              Seus dados foram recebidos e processados com sucesso. 
               Abaixo você pode visualizar as informações enviadas.
             </p>
             <Badge variant="secondary" className="mt-4">
@@ -99,16 +120,16 @@ const SucessoPage = ({ data, onEdit }) => {
         <Alert className="mb-6 border-orange-200 bg-orange-50">
           <AlertTriangle className="h-4 w-4 text-orange-600" />
           <AlertDescription className="text-orange-800">
-            <strong>Encontrou algum erro ou esqueceu de adicionar algo?</strong>
+            <strong>Encontrou algum erro ou esqueceu de adicionar algo?</strong> 
             <br />
-            Você pode editar suas informações clicando no botão "Editar Formulário" abaixo.
+            Você pode editar suas informações clicando no botão "Editar Formulário" abaixo. 
             Suas alterações substituirão os dados enviados anteriormente.
           </AlertDescription>
         </Alert>
 
         {/* Dados Enviados */}
         <div className="space-y-6">
-
+          
           {/* Informações Pessoais */}
           <Card>
             <CardHeader>
@@ -319,9 +340,9 @@ const SucessoPage = ({ data, onEdit }) => {
               <CardContent>
                 <div>
                   <p className="text-sm text-muted-foreground">URL do Vídeo</p>
-                  <a
-                    href={data.linkVideo}
-                    target="_blank"
+                  <a 
+                    href={data.linkVideo} 
+                    target="_blank" 
                     rel="noopener noreferrer"
                     className="font-medium text-primary hover:underline"
                   >
@@ -362,7 +383,7 @@ const SucessoPage = ({ data, onEdit }) => {
                   ))}
                   <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <p className="text-sm text-yellow-800">
-                      <strong>Importante:</strong> Os arquivos foram enviados com sucesso.
+                      <strong>Importante:</strong> Os arquivos foram enviados com sucesso. 
                       Se precisar alterar os arquivos, você pode editá-los através do botão "Editar Formulário".
                     </p>
                   </div>
@@ -415,15 +436,15 @@ const SucessoPage = ({ data, onEdit }) => {
 
         {/* Botões de Ação */}
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={handleEditarFormulario}
+          <Button 
+            onClick={handleEditarFormulario} 
             variant="outline"
             className="flex items-center gap-2 border-orange-300 text-orange-700 hover:bg-orange-50"
           >
             <Edit className="w-4 h-4" />
             Editar Formulário
           </Button>
-
+          
           <Button onClick={handleNovoFormulario} className="flex items-center gap-2">
             <Home className="w-4 h-4" />
             Preencher Novo Formulário

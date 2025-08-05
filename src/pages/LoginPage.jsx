@@ -74,8 +74,12 @@ const LoginPage = ({ onLogin }) => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-            <LogIn className="w-6 h-6 text-primary-foreground" />
+          <div className="mx-auto mb-4 flex items-center justify-center">
+            <img
+              src="/public/preta.png" // Substitua pelo caminho real da logo
+              alt="Logo"
+              className="object-contain"
+            />
           </div>
           <CardTitle className="text-2xl font-bold">Sistema de Formulário</CardTitle>
           <CardDescription>
