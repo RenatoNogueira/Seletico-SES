@@ -253,7 +253,7 @@ const handleConfirmSubmit = () => {
       navigate('/') // Navega para página de login
     }
   }
-
+{/*
   // Carregar rascunho ao inicializar
   useEffect(() => {
     const rascunhoSalvo = localStorage.getItem('formulario_rascunho')
@@ -274,7 +274,7 @@ const handleConfirmSubmit = () => {
         console.error('Erro ao carregar rascunho:', error)
       }
     }
-  }, [])
+  }, [])*/}
 
   const handleClearForm = () => {
     setFormData({
@@ -911,7 +911,7 @@ const handleConfirmSubmit = () => {
                         <LogOut className="w-4 h-4" />
                         Sair
                       </Button>
-
+{/* 
                       <Button
                         type="button"
                         variant="outline"
@@ -920,7 +920,7 @@ const handleConfirmSubmit = () => {
                       >
                         <BookmarkPlus className="w-4 h-4" />
                         Salvar Rascunho
-                      </Button>
+                      </Button>*/}
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-2">

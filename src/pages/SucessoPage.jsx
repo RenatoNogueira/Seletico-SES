@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle, User, Mail, MapPin, Briefcase, Video, Upload, GraduationCap, Home, FileText, Edit, AlertTriangle } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 const SucessoPage = ({ data, onEdit }) => {
   const navigate = useNavigate()
@@ -55,6 +56,26 @@ const SucessoPage = ({ data, onEdit }) => {
     if (onEdit) {
       onEdit(data)
     }
+      useEffect(() => {
+    const rascunhoSalvo = localStorage.getItem('formulario_rascunho')
+    if (rascunhoSalvo) {
+      try {
+        const rascunho = JSON.parse(rascunhoSalvo)
+        const confirmCarregar = window.confirm(
+          `Encontramos um rascunho salvo em ${new Date(rascunho.dataRascunho).toLocaleString('pt-BR')}.\n\nDeseja carregar os dados salvos?`
+        )
+
+        if (confirmCarregar) {
+          // Remove a data do rascunho antes de carregar
+          const { // dataRascunho,
+            ...dadosRascunho } = rascunho
+          setFormData(prev => ({ ...prev, ...dadosRascunho }))
+        }
+      } catch (error) {
+        console.error('Erro ao carregar rascunho:', error)
+      }
+    }
+  }, [])
     navigate('/formulario')
   }
 
