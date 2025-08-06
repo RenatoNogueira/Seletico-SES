@@ -42,30 +42,6 @@ const InformacoesProfissionaisEducacionais = ({
     return []
   }
 
-  const adicionarInformacao = () => {
-    if (disabled) return
-
-    const novaInformacao = {
-      id: Date.now() + Math.random(),
-      tipo: 'educacional', // Alterado para sempre ser educacional
-      profissao: '',
-      empresa: '',
-      cargo: '',
-      dataInicio: '',
-      dataFim: '',
-      atual: false,
-      escolaridade: '',
-      instituicao: '',
-      curso: '',
-      dataFormatura: '',
-      nivel: '', // 'superior' ou 'tecnico'
-      areaFormacao: '', // área específica baseada no nível
-      numeroRegistro: '' // Novo campo para o número de registro
-    }
-
-    const novasInformacoes = [...informacoesProfissionais, novaInformacao]
-    onInformacoesProfissionaisChange(novasInformacoes)
-  }
 
   const removerInformacao = (informacaoId) => {
     if (disabled) return
@@ -110,7 +86,7 @@ const InformacoesProfissionaisEducacionais = ({
         if (campo === 'areaFormacao') {
           infoAtualizada.numeroRegistro = ''
         }
-        
+
         // Se mudou o tipo, limpar campos específicos
         if (campo === 'tipo') {
           if (valor === 'educacional') {
@@ -148,18 +124,18 @@ const InformacoesProfissionaisEducacionais = ({
 
 
   return (
-<div className="space-y-4">
-  <div className="flex flex-col gap-1">
-    <div className="flex items-start gap-2"> {/* items-start para alinhar no topo */}
-      <Briefcase className="w-5 h-5 text-primary mt-0.5" /> {/* Adicionado mt para ajuste fino */}
-      <div>
-        <h3 className="text-lg font-semibold">Área de Formação</h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          As áreas de formação com * exigem a indicação do número do registro profissional
-        </p>
+    <div className="space-y-4">
+      <div className="flex flex-col gap-1">
+        <div className="flex items-start gap-2"> {/* items-start para alinhar no topo */}
+          <Briefcase className="w-5 h-5 text-primary mt-0.5" /> {/* Adicionado mt para ajuste fino */}
+          <div>
+            <h3 className="text-lg font-semibold">Área de Formação</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              As áreas de formação com * exigem a indicação do número do registro profissional
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
       {informacoesProfissionais.length === 0 ? (
         <Card className="border-dashed">
@@ -175,7 +151,7 @@ const InformacoesProfissionaisEducacionais = ({
         </Card>
       ) : (
         <div className="space-y-4">
-          {informacoesProfissionais.map((info, index) => (
+          {informacoesProfissionais.map((info) => (
             <Card key={info.id}>
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
@@ -185,7 +161,7 @@ const InformacoesProfissionaisEducacionais = ({
                     ) : (
                       <GraduationCap className="w-4 h-4" />
                     )}
-                    {info.tipo === 'educacional' ? 'Experiência Profissional' : 'Formação Educacional'} {}
+                    {info.tipo === 'educacional' ? 'Experiência Profissional' : 'Formação Educacional'} { }
                   </CardTitle>
                   {!disabled && informacoesProfissionais.length > 1 && (
                     <Button
@@ -202,7 +178,7 @@ const InformacoesProfissionaisEducacionais = ({
               </CardHeader>
 
               <CardContent className="space-y-4">
-                {/* Seletor de Tipo 
+                {/* Seletor de Tipo
                 <div className="space-y-2">
                   <Label htmlFor={`tipo_${info.id}`}>Tipo *</Label>
                   <Select
@@ -224,7 +200,7 @@ const InformacoesProfissionaisEducacionais = ({
                   )}
                 </div>*/}
 
-                {/* Campos para Experiência Profissional 
+                {/* Campos para Experiência Profissional
                 {info.tipo === 'profissional' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -354,55 +330,55 @@ const InformacoesProfissionaisEducacionais = ({
                     </div>
 
                     {info.nivel && (
-                        <div className="space-y-2">
-                          <Label htmlFor={`areaFormacao_${info.id}`}>Área de Formação *</Label>
-                          
-                          <Select
-                            onValueChange={(value) => handleSelectChange(info.id, 'areaFormacao', value)}
-                            value={info.areaFormacao || ''}
-                            disabled={disabled}
-                          >
-                            <SelectTrigger className={errors[`areaFormacao_${info.id}`] ? 'border-destructive' : ''}>
-                              <SelectValue placeholder="Selecione a área de formação" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {getAreasFormacao(info.nivel).map(area => (
-                                <SelectItem key={area.value} value={area.value}>
-                                  {area.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {errors[`areaFormacao_${info.id}`] && (
-                            <Alert variant="destructive">
-                              <AlertDescription>{errors[`areaFormacao_${info.id}`]}</AlertDescription>
-                            </Alert>
-                          )}
+                      <div className="space-y-2">
+                        <Label htmlFor={`areaFormacao_${info.id}`}>Área de Formação *</Label>
 
- {/* Campo para número de registro (aparece apenas para áreas com *) */}
-                      {info.areaFormacao && info.areaFormacao.includes('*') && (
-                            <div className="mt-3 space-y-2">
-                              <Label htmlFor={`registro_${info.id}`}>
-                                Número de Registro Profissional *
-                              </Label>
-                              <Input
-                                id={`registro_${info.id}`}
-                                value={info.numeroRegistro || ''}
-                                onChange={(e) => handleInputChange(info.id, 'numeroRegistro', e.target.value)}
-                                disabled={disabled}
-                                placeholder="ex: 000000-G/MA"
-                                className={errors[`numeroRegistro_${info.id}`] ? 'border-destructive' : ''}
-                              />
-                              {errors[`numeroRegistro_${info.id}`] && (
-                                <Alert variant="destructive">
-                                  <AlertDescription>{errors[`numeroRegistro_${info.id}`]}</AlertDescription>
-                                </Alert>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    {/* 
+                        <Select
+                          onValueChange={(value) => handleSelectChange(info.id, 'areaFormacao', value)}
+                          value={info.areaFormacao || ''}
+                          disabled={disabled}
+                        >
+                          <SelectTrigger className={errors[`areaFormacao_${info.id}`] ? 'border-destructive' : ''}>
+                            <SelectValue placeholder="Selecione a área de formação" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {getAreasFormacao(info.nivel).map(area => (
+                              <SelectItem key={area.value} value={area.value}>
+                                {area.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {errors[`areaFormacao_${info.id}`] && (
+                          <Alert variant="destructive">
+                            <AlertDescription>{errors[`areaFormacao_${info.id}`]}</AlertDescription>
+                          </Alert>
+                        )}
+
+                        {/* Campo para número de registro (aparece apenas para áreas com *) */}
+                        {info.areaFormacao && info.areaFormacao.includes('*') && (
+                          <div className="mt-3 space-y-2">
+                            <Label htmlFor={`registro_${info.id}`}>
+                              Número de Registro Profissional *
+                            </Label>
+                            <Input
+                              id={`registro_${info.id}`}
+                              value={info.numeroRegistro || ''}
+                              onChange={(e) => handleInputChange(info.id, 'numeroRegistro', e.target.value)}
+                              disabled={disabled}
+                              placeholder="ex: 000000-G/MA"
+                              className={errors[`numeroRegistro_${info.id}`] ? 'border-destructive' : ''}
+                            />
+                            {errors[`numeroRegistro_${info.id}`] && (
+                              <Alert variant="destructive">
+                                <AlertDescription>{errors[`numeroRegistro_${info.id}`]}</AlertDescription>
+                              </Alert>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {/*
                     <div className="space-y-2">
                       <Label htmlFor={`instituicao_${info.id}`}>Instituição *</Label>
                       <Input
@@ -448,7 +424,7 @@ const InformacoesProfissionaisEducacionais = ({
           ))}
         </div>
       )}
-{/* 
+      {/*
       {!disabled && informacoesProfissionais.length > 0 && (
         <div className="text-center">
           <Button

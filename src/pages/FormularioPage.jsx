@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,11 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Separator } from '@/components/ui/separator'
 import FileUploader from '../components/FileUploader'
-import CursosFormacoes from '../components/CursosFormacoes'
+// mport CursosFormacoes from '../components/CursosFormacoes'
 import InformacoesProfissionaisEducacionais from '../components/InformacoesProfissionaisEducacionais'
 import VideoPreview from '../components/VideoPreview'
 import NavigationMenu from '../components/NavigationMenu'
-import ProgressBar from '../components/ProgressBar'
+// import ProgressBar from '../components/ProgressBar'
 import SubmitProgressModal from '../components/SubmitProgressModal'
 import { validateCPF, formatCPF, validateEmail, validateCEP, formatCEP, validateVideoURL } from '../utils/validations'
 import { fetchAddressByCEP } from '../utils/cepService'
@@ -95,7 +95,7 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     //   dataConclusao: '',
     //   cargaHoraria: ''
     // }]
-    
+
   })
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
@@ -198,48 +198,37 @@ const FormularioPage = ({ userData, onSubmit, onLogout }) => {
     return Object.keys(newErrors).length === 0
   }
 
-const handleKeyDown = (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-  }
-};  
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setShowConfirmationModal(true); // Mostra o modal de confirmação em vez de validar direto
-};
-
-const handleConfirmSubmit = () => {
-  setShowConfirmationModal(false);
-  
-  if (!validateForm()) {
-    const firstErrorField = Object.keys(errors)[0];
-    const element = document.getElementById(firstErrorField);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
     }
-    return;
-  }
+  };
 
-  setShowSubmitProgress(true);
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setShowConfirmationModal(true); // Mostra o modal de confirmação em vez de validar direto
+  };
+
+  const handleConfirmSubmit = () => {
+    setShowConfirmationModal(false);
+
+    if (!validateForm()) {
+      const firstErrorField = Object.keys(errors)[0];
+      const element = document.getElementById(firstErrorField);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    setShowSubmitProgress(true);
+  };
   const handleSubmitComplete = () => {
     setShowSubmitProgress(false)
     onSubmit(formData)
     navigate('/sucesso')
   }
 
-  const handleSalvarRascunho = () => {
-    // Salvar no localStorage
-    const rascunho = {
-      ...formData,
-      dataRascunho: new Date().toISOString()
-    }
-    localStorage.setItem('formulario_rascunho', JSON.stringify(rascunho))
-
-    // Mostrar feedback visual
-    alert('Rascunho salvo com sucesso! Você pode continuar preenchendo mais tarde.')
-  }
 
   const handleSair = () => {
     const confirmSair = window.confirm(
@@ -253,7 +242,7 @@ const handleConfirmSubmit = () => {
       navigate('/') // Navega para página de login
     }
   }
-{/*
+  {/*
   // Carregar rascunho ao inicializar
   useEffect(() => {
     const rascunhoSalvo = localStorage.getItem('formulario_rascunho')
@@ -326,7 +315,7 @@ const handleConfirmSubmit = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Barra de Progresso - Sidebar Esquerda 
+          {/* Barra de Progresso - Sidebar Esquerda
           <div className="lg:col-span-1">
             <ProgressBar formData={formData} />
           </div>*/}
@@ -533,13 +522,13 @@ const handleConfirmSubmit = () => {
                         />
                       </div>
 
-                     
+
                     </div>
                   </div>
 
                   <Separator />
 
-                  {/* Seção PcD 
+                  {/* Seção PcD
                   <div data-section="pcd">
                     <div className="flex items-center gap-2 mb-4">
                       <User className="w-5 h-5 text-primary" />
@@ -702,7 +691,7 @@ const handleConfirmSubmit = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="cep">CEP *</Label>
-                        <div className="relative">
+                        <div className="relative flex items-center gap-2">
                           <Input
                             id="cep"
                             name="cep"
@@ -710,12 +699,19 @@ const handleConfirmSubmit = () => {
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                             onBlur={handleCepBlur}
-                            className={errors.cep ? 'border-destructive' : ''}
+                            className={`flex-1 ${errors.cep ? 'border-destructive' : ''}`}
                             placeholder="00000-000"
                             maxLength={9}
                           />
+                          <button
+                            type="button"
+                            onClick={handleCepBlur} // ou outro handler específico para buscar o CEP
+                            className="px-3 py-2 text-sm bg-primary text-white rounded-md hover:bg-primary/90"
+                          >
+                            Buscar
+                          </button>
                           {isCepLoading && (
-                            <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin" />
+                            <Loader2 className="absolute right-12 top-3 h-4 w-4 animate-spin text-muted-foreground" />
                           )}
                         </div>
                         {errors.cep && (
@@ -724,6 +720,7 @@ const handleConfirmSubmit = () => {
                           </Alert>
                         )}
                       </div>
+
 
                       <div className="space-y-2">
                         <Label htmlFor="logradouro">Logradouro *</Label>
@@ -911,7 +908,7 @@ const handleConfirmSubmit = () => {
                         <LogOut className="w-4 h-4" />
                         Sair
                       </Button>
-{/* 
+                      {/*
                       <Button
                         type="button"
                         variant="outline"
@@ -960,18 +957,18 @@ const handleConfirmSubmit = () => {
         </div>
       </div>
 
-    {/* ADICIONE AQUI OS MODAIS */}
-    <ConfirmationModal
-      isOpen={showConfirmationModal}
-      onConfirm={handleConfirmSubmit}
-      onCancel={() => setShowConfirmationModal(false)}
-    />
-    
-    <SubmitProgressModal
-      isOpen={showSubmitProgress}
-      onComplete={handleSubmitComplete}
-    />
-  </div>
+      {/* ADICIONE AQUI OS MODAIS */}
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        onConfirm={handleConfirmSubmit}
+        onCancel={() => setShowConfirmationModal(false)}
+      />
+
+      <SubmitProgressModal
+        isOpen={showSubmitProgress}
+        onComplete={handleSubmitComplete}
+      />
+    </div>
   )
 }
 
