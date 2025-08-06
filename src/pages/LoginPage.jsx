@@ -7,11 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { validateCPF, formatCPF, validateBirthDate } from '../utils/validations'
 import { User, Calendar, LogIn } from 'lucide-react'
-
+//import {register, login} from '@/services/authService'
+import { login, register } from '../services/authService.js'
+import {buscarCandidatoPorCPF} from '../services/candidatoService.js'
 const LoginPage = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     cpf: '',
-    dataNascimento: ''
+    dataNascimento: '',
+    email: ''
   })
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
@@ -55,20 +58,52 @@ const LoginPage = ({ onLogin }) => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  if (!validateForm()) return
 
-    if (!validateForm()) return
+  setIsLoading(true)
 
-    setIsLoading(true)
+  try {
+    const cpfDigitado = formData.cpf.replace(/\D/g, '')
 
-    // Simular delay de autenticação
-    setTimeout(() => {
-      onLogin(formData.cpf, formData.dataNascimento)
-      setIsLoading(false)
+    // Tenta buscar diretamente pelo CPF
+    const candidato = await buscarCandidatoPorCPF(cpfDigitado)
+
+    if (candidato) {
+      console.log('Candidato já existe, redirecionando...')
+      await login({
+      userName: cpfDigitado,
+      password: formData.dataNascimento,
+})
       navigate('/formulario')
-    }, 1000)
+    }
+  } catch (error) {
+    if (error.response?.status === 404) {
+      // Se não achou o candidato, tenta registrar
+      try {
+        const cadastro = await register({
+          cpf: formData.cpf.replace(/\D/g, ''),
+          dataNascimento: formData.dataNascimento,
+          email: formData.email,
+        })
+
+        console.log('Cadastro feito com sucesso:', cadastro)
+        onLogin(formData.cpf, formData.dataNascimento)
+        navigate('/formulario')
+
+      } catch (cadastroErro) {
+        console.error('Erro no cadastro:', cadastroErro.response?.data || cadastroErro.message)
+        setErrors({ cpf: 'Erro ao cadastrar usuário.' })
+      }
+    } else {
+      console.error('Erro inesperado:', error.response?.data || error.message)
+      setErrors({ cpf: 'Erro ao verificar cadastro.' })
+    }
+  } finally {
+    setIsLoading(false)
   }
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -126,6 +161,26 @@ const LoginPage = ({ onLogin }) => {
               {errors.dataNascimento && (
                 <Alert variant="destructive">
                   <AlertDescription>{errors.dataNascimento}</AlertDescription>
+                </Alert>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <LogIn className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
+                />
+              </div>
+              {errors.email && (
+                <Alert variant="destructive">
+                  <AlertDescription>{errors.email}</AlertDescription>
                 </Alert>
               )}
             </div>
