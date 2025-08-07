@@ -7,9 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { validateCPF, formatCPF, validateBirthDate } from '../utils/validations'
 import { User, Calendar, LogIn } from 'lucide-react'
-//import {register, login} from '@/services/authService'
-import { login, register } from '../services/authService.js'
-import {buscarCandidatoPorCPF} from '../services/candidatoService.js'
+import { register } from '../services/authService.js' // Importe apenas o registro
+
 const LoginPage = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     cpf: '',
@@ -18,20 +17,19 @@ const LoginPage = ({ onLogin }) => {
   })
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
   const navigate = useNavigate()
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
 
     if (name === 'cpf') {
-      // Formatar CPF automaticamente
       const formattedCPF = formatCPF(value)
       setFormData(prev => ({ ...prev, [name]: formattedCPF }))
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
 
-    // Limpar erro do campo quando o usuário começar a digitar
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
     }
@@ -39,6 +37,7 @@ const LoginPage = ({ onLogin }) => {
 
   const validateForm = () => {
     const newErrors = {}
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // Validar CPF
     if (!formData.cpf) {
@@ -54,56 +53,68 @@ const LoginPage = ({ onLogin }) => {
       newErrors.dataNascimento = 'Data de nascimento inválida ou idade menor que 16 anos'
     }
 
+    // Validar email
+    if (!formData.email) {
+      newErrors.email = 'Email é obrigatório'
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Email inválido'
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-const handleSubmit = async (e) => {
-  e.preventDefault()
-  if (!validateForm()) return
+  const handleRegister = async (event) => {
+    event.preventDefault();
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
+    setSuccessMessage('');
+    
+    const cpfLimpo = formData.cpf.replace(/\D/g, '');
+    const isoDate = new Date(formData.dataNascimento).toISOString().split('T')[0];
 
-  setIsLoading(true)
+    try {
+      console.log('Enviando dados para registro:', {
+        cpf: cpfLimpo,
+        dataNascimento: isoDate,
+        email: formData.email,
+      });
 
-  try {
-    const cpfDigitado = formData.cpf.replace(/\D/g, '')
+      const response = await register({
+        cpf: cpfLimpo,
+        dataNascimento: isoDate,
+        email: formData.email,
+        password: isoDate
+      });
 
-    // Tenta buscar diretamente pelo CPF
-    const candidato = await buscarCandidatoPorCPF(cpfDigitado)
+      console.log('Resposta do servidor:', response);
+      setSuccessMessage('Registro realizado com sucesso!');
+      
+      // Limpar formulário após sucesso
+      setFormData({
+        cpf: '',
+        dataNascimento: '',
+        email: ''
+      });
 
-    if (candidato) {
-      console.log('Candidato já existe, redirecionando...')
-      await login({
-      userName: cpfDigitado,
-      password: formData.dataNascimento,
-})
-      navigate('/formulario')
-    }
-  } catch (error) {
-    if (error.response?.status === 404) {
-      // Se não achou o candidato, tenta registrar
-      try {
-        const cadastro = await register({
-          cpf: formData.cpf.replace(/\D/g, ''),
-          dataNascimento: formData.dataNascimento,
-          email: formData.email,
-        })
-
-        console.log('Cadastro feito com sucesso:', cadastro)
-        onLogin(formData.cpf, formData.dataNascimento)
-        navigate('/formulario')
-
-      } catch (cadastroErro) {
-        console.error('Erro no cadastro:', cadastroErro.response?.data || cadastroErro.message)
-        setErrors({ cpf: 'Erro ao cadastrar usuário.' })
+    } catch (error) {
+      console.error('Erro no registro:', error);
+      
+      let errorMessage = 'Erro ao registrar. Tente novamente.';
+      if (error.response) {
+        // Se o backend retornou uma mensagem de erro
+        errorMessage = error.response.data?.detail || error.response.data?.message || errorMessage;
+      } else if (error.request) {
+        // A requisição foi feita mas não houve resposta
+        errorMessage = 'Sem resposta do servidor. Verifique sua conexão.';
       }
-    } else {
-      console.error('Erro inesperado:', error.response?.data || error.message)
-      setErrors({ cpf: 'Erro ao verificar cadastro.' })
+      
+      setErrors({ cpf: errorMessage });
+    } finally {
+      setIsLoading(false);
     }
-  } finally {
-    setIsLoading(false)
   }
-}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -111,18 +122,18 @@ const handleSubmit = async (e) => {
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex items-center justify-center">
             <img
-              src="/public/preta.png" // Substitua pelo caminho real da logo
+              src="/public/preta.png"
               alt="Logo"
               className="object-contain"
             />
           </div>
-          <CardTitle className="text-2xl font-bold">Sistema de Formulário</CardTitle>
+          <CardTitle className="text-2xl font-bold">Sistema de Cadastro</CardTitle>
           <CardDescription>
-            Entre com seu CPF e data de nascimento para acessar o formulário
+            Preencha seus dados para realizar o cadastro
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="cpf">CPF</Label>
               <div className="relative">
@@ -164,6 +175,7 @@ const handleSubmit = async (e) => {
                 </Alert>
               )}
             </div>
+            
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -190,8 +202,14 @@ const handleSubmit = async (e) => {
               className="w-full"
               disabled={isLoading}
             >
-              {isLoading ? 'Entrando...' : 'Entrar'}
+              {isLoading ? 'Registrando...' : 'Registrar'}
             </Button>
+            
+            {successMessage && (
+              <Alert variant="success">
+                <AlertDescription>{successMessage}</AlertDescription>
+              </Alert>
+            )}
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
@@ -204,4 +222,3 @@ const handleSubmit = async (e) => {
 }
 
 export default LoginPage
-
