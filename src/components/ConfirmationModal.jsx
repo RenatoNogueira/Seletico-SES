@@ -1,4 +1,3 @@
-// src/components/ConfirmationModal.jsx
 import { Button } from '@/components/ui/button';
 
 const ConfirmationModal = ({ isOpen, onConfirm, onCancel, title, message, confirmText, cancelText }) => {
